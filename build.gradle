@@ -10,7 +10,9 @@ apply plugin: 'maven'
 
 
 dependencies {
+
     compile gradleApi()
+
     compile localGroovy()
 }
 
@@ -41,10 +43,9 @@ uploadArchives {
                 description "FileUploader"
                 url repoUrl
                 groupId "com.gooker"
-                artifactId "fileupload"
-                version "0.0.4"
+                artifactId "upload"
+                version "0.0.6"
                 packaging "com.gooker"
-                labels = ['gradle', 'com.gooker.plugin', 'uploader']
             }
         }
     }
