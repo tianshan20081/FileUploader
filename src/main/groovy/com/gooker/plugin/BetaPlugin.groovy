@@ -93,7 +93,7 @@ public class BetaPlugin implements Plugin<Project> {
      * @return
      */
     public UploadInfo generateUploadInfo(Object variant) {
-        def manifestFile = variant.outputs.processManifest.manifestOutputFile[0]
+//        def manifestFile = variant.outputs.processManifest.manifestOutputFile[0]
 //        println("-> Manifest: " + manifestFile)
 //        println("VersionCode: " + variant.getVersionCode() + " VersionName: " + variant.getVersionName())
 
@@ -236,7 +236,7 @@ public class BetaPlugin implements Plugin<Project> {
 
         String result = new String(connectionUtil.post(), "UTF-8");
         def data = new JsonSlurper().parseText(result)
-        if (data.rtcode == 0) {
+        if (data.success) {
             println("Bugly --->share url: " + data.data.url)
             return true
         }
