@@ -22,7 +22,7 @@ repositories {
 
 group = 'com.gooker.plugin'
 
-version = '0.1.0'
+version = '0.1.4'
 
 uploadArchives {
     repositories {

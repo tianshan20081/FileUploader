@@ -46,7 +46,9 @@ public class BetaPlugin implements Plugin<Project> {
     @Override
     void apply(Project project) {
         this.project = project
-        // 接收外部参数
+        /**
+         *  接收外部参数
+         */
         project.extensions.create("beta", BetaExtension)
 
         // 取得外部参数
@@ -98,25 +100,30 @@ public class BetaPlugin implements Plugin<Project> {
 //        println("VersionCode: " + variant.getVersionCode() + " VersionName: " + variant.getVersionName())
 
         UploadInfo uploadInfo = new UploadInfo()
+
         uploadInfo.url = project.beta.url
-        uploadInfo.appId = project.beta.appId
-        uploadInfo.appKey = project.beta.appKey
-        if (project.beta.title == null) {
-            uploadInfo.title = project.getName() + "-" + variant.getVersionName() + variant.getVersionCode()
-        } else {
-            uploadInfo.title = project.beta.title
+//        uploadInfo.appId = project.beta.appId
+//        uploadInfo.appKey = project.beta.appKey
+//        if (project.beta.title == null) {
+//            uploadInfo.title = project.getName() + "-" + variant.getVersionName() + variant.getVersionCode()
+//        } else {
+//            uploadInfo.title = project.beta.title
+//        }
+
+//        if (project.beta.desc == null) {
+//            uploadInfo.description = ""
+//        } else {
+//            uploadInfo.description = project.beta.desc
+//        }
+
+        if (null != project.beta.extras) {
+            uploadInfo.extras = project.beta.extras
         }
 
-        if (project.beta.desc == null) {
-            uploadInfo.description = ""
-        } else {
-            uploadInfo.description = project.beta.desc
-        }
-
-        uploadInfo.secret = project.beta.secret
-        uploadInfo.users = project.beta.users
-        uploadInfo.password = project.beta.password
-        uploadInfo.download_limit = project.beta.download_limit
+//        uploadInfo.secret = project.beta.secret
+//        uploadInfo.users = project.beta.users
+//        uploadInfo.password = project.beta.password
+//        uploadInfo.download_limit = project.beta.download_limit
         // if you not set apkFile, default get the assemble output file
         if (project.beta.apkFile != null) {
             uploadInfo.sourceFile = project.beta.apkFile
@@ -129,9 +136,9 @@ public class BetaPlugin implements Plugin<Project> {
             println("Bugly: your apk absolutepath :" + apkFile.getAbsolutePath())
         }
 
-        if (project.beta.expId != null) {
-            uploadInfo.expId = project.beta.expId
-        }
+//        if (project.beta.expId != null) {
+//            uploadInfo.expId = project.beta.expId
+//        }
 
         return uploadInfo
     }
@@ -172,32 +179,32 @@ public class BetaPlugin implements Plugin<Project> {
         String url = uploadInfo.url
         println("Bugly: Apk start uploading....")
         //
-        if (uploadInfo.appId == null) {
-            project.logger.error("Please set the app id, eg: appId = \"900037672\"")
-            return false
-        }
-
-        if (uploadInfo.appKey == null) {
-            project.logger.error("Please set app key, eg: appKey = \"bQvYLRrBNiqUctfi\"")
-            return false
-        }
-
-        if (uploadInfo.secret == Constants.OPEN_FOR_PASSWORD) {
-            if (uploadInfo.password == null) {
-                project.logger.error("your apk download open for password, you must set the password")
-                return false
-            }
-        } else if (uploadInfo.secret == Constants.OPEN_FOR_QQGROUP) {
-            if (uploadInfo.users == null) {
-                project.logger.error("your apk download open for qq group, you must set the users")
-                return false
-            }
-        } else if (uploadInfo.secret == Constants.OPEN_FOR_WHITELIST) {
-            if (uploadInfo.users == null) {
-                project.logger.error("your apk download open for white list, you must set the users")
-                return false
-            }
-        }
+//        if (uploadInfo.appId == null) {
+//            project.logger.error("Please set the app id, eg: appId = \"900037672\"")
+//            return false
+//        }
+//
+//        if (uploadInfo.appKey == null) {
+//            project.logger.error("Please set app key, eg: appKey = \"bQvYLRrBNiqUctfi\"")
+//            return false
+//        }
+//
+//        if (uploadInfo.secret == Constants.OPEN_FOR_PASSWORD) {
+//            if (uploadInfo.password == null) {
+//                project.logger.error("your apk download open for password, you must set the password")
+//                return false
+//            }
+//        } else if (uploadInfo.secret == Constants.OPEN_FOR_QQGROUP) {
+//            if (uploadInfo.users == null) {
+//                project.logger.error("your apk download open for qq group, you must set the users")
+//                return false
+//            }
+//        } else if (uploadInfo.secret == Constants.OPEN_FOR_WHITELIST) {
+//            if (uploadInfo.users == null) {
+//                project.logger.error("your apk download open for white list, you must set the users")
+//                return false
+//            }
+//        }
         println("Bugly:" + uploadInfo.toString())
 
         if (!post(url, uploadInfo.sourceFile, uploadInfo)) {
@@ -218,21 +225,30 @@ public class BetaPlugin implements Plugin<Project> {
      */
     public boolean post(String url, String filePath, UploadInfo uploadInfo) {
         HttpURLConnectionUtil connectionUtil = new HttpURLConnectionUtil(url, Constants.HTTPMETHOD_POST);
-        if (uploadInfo.expId != null) {
-            connectionUtil.addTextParameter(Constants.EXP_ID, uploadInfo.expId);
-            connectionUtil.setHttpMethod(Constants.HTTPMETHOD_PUT)
-        } else {
-            connectionUtil.addTextParameter(Constants.APP_ID, uploadInfo.appId);
-        }
-        connectionUtil.addTextParameter(Constants.PLATFORM_ID, uploadInfo.pid);
-        connectionUtil.addTextParameter(Constants.TITLE, uploadInfo.title);
-        connectionUtil.addTextParameter(Constants.DESCRIPTION, uploadInfo.description);
-        connectionUtil.addTextParameter(Constants.SECRET, String.valueOf(uploadInfo.secret));
-        connectionUtil.addTextParameter(Constants.USERS, uploadInfo.users);
-        connectionUtil.addTextParameter(Constants.PASSWORD, uploadInfo.password);
-        connectionUtil.addTextParameter(Constants.DOWNLOAD_LIMIT, String.valueOf(uploadInfo.download_limit));
+//        if (uploadInfo.expId != null) {
+//            connectionUtil.addTextParameter(Constants.EXP_ID, uploadInfo.expId);
+//            connectionUtil.setHttpMethod(Constants.HTTPMETHOD_PUT)
+//        } else {
+//            connectionUtil.addTextParameter(Constants.APP_ID, uploadInfo.appId);
+//        }
+//        connectionUtil.addTextParameter(Constants.PLATFORM_ID, uploadInfo.pid);
+//        connectionUtil.addTextParameter(Constants.TITLE, uploadInfo.title);
+//        connectionUtil.addTextParameter(Constants.DESCRIPTION, uploadInfo.description);
+//        connectionUtil.addTextParameter(Constants.SECRET, String.valueOf(uploadInfo.secret));
+//        connectionUtil.addTextParameter(Constants.USERS, uploadInfo.users);
+//        connectionUtil.addTextParameter(Constants.PASSWORD, uploadInfo.password);
+//        connectionUtil.addTextParameter(Constants.DOWNLOAD_LIMIT, String.valueOf(uploadInfo.download_limit));
 
         connectionUtil.addFileParameter(Constants.FILE, new File(filePath));
+
+        if (null != uploadInfo.extras && !uploadInfo.extras.isEmpty()) {
+            Map<String, Object> extras = uploadInfo.extras;
+            Set<Map.Entry<String, Object>> entrySet = extras.entrySet()
+            for (Map.Entry<String, Object> entry : entrySet) {
+                connectionUtil.addTextParameter(entry.key, entry.value.toString())
+            }
+        }
+
 
         String result = new String(connectionUtil.post(), "UTF-8");
         def data = new JsonSlurper().parseText(result)
@@ -247,47 +263,38 @@ public class BetaPlugin implements Plugin<Project> {
     private static class UploadInfo {
         public String url = null
         // App ID of Bugly platform.
-        public String appId = null
+//        public String appId = null
         // App Key of Bugly platform.
-        public String appKey = null
+//        public String appKey = null
         // platform id
-        public String pid = "1"
+//        public String pid = "1"
         // Name of apk file to upload.
         public String sourceFile = null
         // app version title
-        public String title = null
+//        public String title = null
         // app version description [option]
-        public String description = null
+//        public String description = null
         // app secret level
-        public int secret = 0
+//        public int secret = 0
         // if open range was qq group set users to qq group num separate by ';' eg: 13244;23456;43843
         // if open range was qq num set users to qq num separate by ';' eg: 1000136; 10000148;1888432
-        public String users = null
+//        public String users = null
         // if open range was password you must set password
-        public String password = null
+//        public String password = null
         // download limit [option] default 10000
-        public int download_limit = 10000
+//        public int download_limit = 10000
         // exp id
-        public String expId = null
+//        public String expId = null
 
-        public Map<String, String> extras = null
+        public Map<String, Object> extras = null
 
 
         @Override
         public String toString() {
             return "UploadInfo{" +
-                    "appId='" + appId + '\'' +
-                    ", url='" + url + '\'' +
-                    ", appKey='" + appKey + '\'' +
-                    ", pid='" + pid + '\'' +
-                    ", apkFile='" + sourceFile + '\'' +
-                    ", title='" + title + '\'' +
-                    ", description='" + description + '\'' +
-                    ", secret=" + secret +
-                    ", users='" + users + '\'' +
-                    ", password='" + password + '\'' +
-                    ", download_limit=" + download_limit +
-                    ", expId='" + expId + '\'' +
+                    "url='" + url + '\'' +
+                    ", sourceFile='" + sourceFile + '\'' +
+                    ", extras=" + extras +
                     '}';
         }
     }
