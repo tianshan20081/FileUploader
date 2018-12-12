@@ -36,6 +36,9 @@ import groovy.json.JsonSlurper
  * @author wenjiewu
  */
 public class BetaPlugin implements Plugin<Project> {
+
+    private static final String TAG = BetaPlugin.class.getSimpleName();
+
     private Project project = null;
 
     // URL for uploading apk file
@@ -58,7 +61,7 @@ public class BetaPlugin implements Plugin<Project> {
 
                 // Check for execution
                 if (false == project.beta.enable) {
-                    project.logger.error("Bugly: beta gradle enable is false, if you want to auto upload apk file, you should set the execute = true")
+                    project.logger.error(TAG + ": beta gradle enable is false, if you want to auto upload apk file, you should set the execute = true")
                     return
                 }
 
@@ -74,12 +77,12 @@ public class BetaPlugin implements Plugin<Project> {
                     project.tasks["assemble${variantName}"].doLast {
                         // if debug model and debugOn = false no execute upload
                         if (variantName.contains("Debug") && !project.beta.debugOn) {
-                            println("Bugly: the option debugOn is closed, if you want to upload apk file on debug model, you can set debugOn = true to open it")
+                            println(TAG + ": the option debugOn is closed, if you want to upload apk file on debug model, you can set debugOn = true to open it")
                             return
                         }
 
                         if (variantName.contains("Release")) {
-                            println("Bugly: the option autoUpload is opened, it will auto upload the release to the bugly platform")
+                            println(TAG + ": the option autoUpload is opened, it will auto upload the release to the bugly platform")
                         }
                         uploadApk(generateUploadInfo(variant))
 
@@ -127,13 +130,13 @@ public class BetaPlugin implements Plugin<Project> {
         // if you not set apkFile, default get the assemble output file
         if (project.beta.apkFile != null) {
             uploadInfo.sourceFile = project.beta.apkFile
-            println("Bugly: you has set the custom apkFile")
-            println("Bugly: your apk absolutepath :" + project.beta.apkFile)
+            println(TAG + ": you has set the custom apkFile")
+            println(TAG + ": your apk absolutepath :" + project.beta.apkFile)
         } else {
             File apkFile = variant.outputs[0].outputFile
             uploadInfo.sourceFile = apkFile.getAbsolutePath()
-            println("Bugly: the apkFile is default set to build file")
-            println("Bugly: your apk absolutepath :" + apkFile.getAbsolutePath())
+            println(TAG + ": the apkFile is default set to build file")
+            println(TAG + ": your apk absolutepath :" + apkFile.getAbsolutePath())
         }
 
 //        if (project.beta.expId != null) {
@@ -154,12 +157,12 @@ public class BetaPlugin implements Plugin<Project> {
         Task uploadTask = project.tasks.create("upload${variantName}BetaApkFile") << {
             // if debug model and debugOn = false no execute upload
             if (variantName.contains("Debug") && !project.beta.debugOn) {
-                println("Bugly: the option debugOn is closed, if you want to upload apk file on debug model, you can set debugOn = true to open it")
+                println(TAG + ": the option debugOn is closed, if you want to upload apk file on debug model, you can set debugOn = true to open it")
                 return
             }
             uploadApk(generateUploadInfo(variant))
         }
-        println("Bugly:create upload${variantName}BetaApkFile task")
+        println(TAG + ":create upload${variantName}BetaApkFile task")
         return uploadTask
     }
 
@@ -177,7 +180,7 @@ public class BetaPlugin implements Plugin<Project> {
 //        }
 
         String url = uploadInfo.url
-        println("Bugly: Apk start uploading....")
+        println(TAG + ": Apk start uploading....")
         //
 //        if (uploadInfo.appId == null) {
 //            project.logger.error("Please set the app id, eg: appId = \"900037672\"")
@@ -205,13 +208,13 @@ public class BetaPlugin implements Plugin<Project> {
 //                return false
 //            }
 //        }
-        println("Bugly:" + uploadInfo.toString())
+        println(TAG + ":" + uploadInfo.toString())
 
         if (!post(url, uploadInfo.sourceFile, uploadInfo)) {
-            project.logger.error("Bugly: Failed to upload!")
+            project.logger.error(TAG + ": Failed to upload!")
             return false
         } else {
-            println("Bugly: upload apk success !!!")
+            println(TAG + ": upload apk success !!!")
             return true
         }
     }
@@ -253,7 +256,7 @@ public class BetaPlugin implements Plugin<Project> {
         String result = new String(connectionUtil.post(), "UTF-8");
         def data = new JsonSlurper().parseText(result)
         if (data.success) {
-            println("Bugly --->share url: " + data.data.url)
+            println(TAG + " --->share url: " + data.data.url)
             return true
         }
         return false;
