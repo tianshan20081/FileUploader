@@ -270,7 +270,7 @@ public class BetaPlugin implements Plugin<Project> {
             println "文件上传失败 ${e.message}"
         }
 
-        return true
+        return false
     }
 
 
