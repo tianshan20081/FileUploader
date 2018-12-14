@@ -84,7 +84,7 @@ public class BetaPlugin implements Plugin<Project> {
                         if (variantName.contains("Release")) {
                             println(TAG + ": the option autoUpload is opened, it will auto upload the release to the bugly platform")
                         }
-                        uploadApk(generateUploadInfo(variant))
+                        uploadApk(generateUploadInfo(variant), variantName)
 
                     }
                 }
@@ -160,7 +160,7 @@ public class BetaPlugin implements Plugin<Project> {
                 println(TAG + ": the option debugOn is closed, if you want to upload apk file on debug model, you can set debugOn = true to open it")
                 return
             }
-            uploadApk(generateUploadInfo(variant))
+            uploadApk(generateUploadInfo(variant), variantName)
         }
         println(TAG + ":create upload${variantName}BetaApkFile task")
         return uploadTask
@@ -171,7 +171,7 @@ public class BetaPlugin implements Plugin<Project> {
      * @param uploadInfo
      * @return
      */
-    public boolean uploadApk(UploadInfo uploadInfo) {
+    public boolean uploadApk(UploadInfo uploadInfo, String variantName) {
         // 拼接url如：https://api.bugly.qq.com/beta/apiv1/exp?app_key=bQvYLRrBNiqUctfi
 //        todo
 //        String url = APK_UPLOAD_URL + uploadInfo.appKey
@@ -210,7 +210,7 @@ public class BetaPlugin implements Plugin<Project> {
 //        }
         println(TAG + ":" + uploadInfo.toString())
 
-        if (!post(url, uploadInfo.sourceFile, uploadInfo)) {
+        if (!post(url, uploadInfo.sourceFile, uploadInfo, variantName)) {
             project.logger.error(TAG + ": Failed to upload!")
             return false
         } else {
@@ -226,7 +226,7 @@ public class BetaPlugin implements Plugin<Project> {
      * @param uploadInfo 更新信息
      * @return
      */
-    public boolean post(String url, String filePath, UploadInfo uploadInfo) {
+    public boolean post(String url, String filePath, UploadInfo uploadInfo, String variantName) {
         HttpURLConnectionUtil connectionUtil = new HttpURLConnectionUtil(url, Constants.HTTPMETHOD_POST);
 //        if (uploadInfo.expId != null) {
 //            connectionUtil.addTextParameter(Constants.EXP_ID, uploadInfo.expId);
@@ -242,6 +242,7 @@ public class BetaPlugin implements Plugin<Project> {
 //        connectionUtil.addTextParameter(Constants.PASSWORD, uploadInfo.password);
 //        connectionUtil.addTextParameter(Constants.DOWNLOAD_LIMIT, String.valueOf(uploadInfo.download_limit));
 
+        connectionUtil.addTextParameter("variantName", variantName)
         connectionUtil.addFileParameter(Constants.FILE, new File(filePath));
 
         if (null != uploadInfo.extras && !uploadInfo.extras.isEmpty()) {
