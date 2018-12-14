@@ -255,14 +255,21 @@ public class BetaPlugin implements Plugin<Project> {
         }
 
 
-        String result = new String(connectionUtil.post(), "UTF-8");
-        def data = new JsonSlurper().parseText(result)
-        if (data.success) {
-            println(TAG + " --->share url: " + data.data.url)
-            return true
+        try {
+            String result = new String(connectionUtil.post(), "UTF-8");
+
+            println "File upload result :${result}"
+
+            def data = new JsonSlurper().parseText(result)
+            if (data.success) {
+                println(TAG + " --->share url: " + data.data.url)
+                return true
+            }
+            println "文件上传失败 ${data}"
+        } catch (Exception e) {
+            println "文件上传失败 ${e.message}"
         }
-        println "文件上传失败 ${data}"
-        // todo
+
         return true
     }
 
