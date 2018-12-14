@@ -60,7 +60,7 @@ public class BetaPlugin implements Plugin<Project> {
                 String variantName = variant.name.capitalize()
 
                 // Check for execution
-                if (false == project.beta.enable) {
+                if (project.beta == null || false == project.beta.enable) {
                     project.logger.error(TAG + ": beta gradle enable is false, if you want to auto upload apk file, you should set the execute = true")
                     return
                 }
@@ -212,7 +212,8 @@ public class BetaPlugin implements Plugin<Project> {
 
         if (!post(url, uploadInfo.sourceFile, uploadInfo, variantName)) {
             project.logger.error(TAG + ": Failed to upload!")
-            return false
+            // todo
+            return true
         } else {
             println(TAG + ": upload apk success !!!")
             return true
@@ -260,7 +261,9 @@ public class BetaPlugin implements Plugin<Project> {
             println(TAG + " --->share url: " + data.data.url)
             return true
         }
-        return false;
+        println "文件上传失败 ${data}"
+        // todo
+        return true
     }
 
 
