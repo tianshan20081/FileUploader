@@ -22,7 +22,7 @@ repositories {
 
 group = 'com.gooker.plugin'
 
-version = '0.2.0'
+version = '0.2.1'
 
 uploadArchives {
     repositories {
@@ -40,15 +40,15 @@ uploadArchives {
                 authentication(userName: userName, password: userPassword)
             }
 
-//            pom.project {
-//                name "FileUploader"
-//                description "FileUploader"
-//                url repoUrl
-//                groupId "com.gooker"
-//                artifactId "upload"
-//                version "0.0.6"
-//                packaging "com.gooker"
-//            }
+            pom.project {
+                name "uploader"
+                description "FileUploader"
+                url repoUrl
+                groupId "com.gooker.plugin"
+                artifactId "uploader"
+                version "0.2.2"
+                packaging "com.gooker"
+            }
         }
     }
 }
